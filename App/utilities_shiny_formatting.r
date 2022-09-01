@@ -69,37 +69,21 @@ allocations_plotspanel <-
   # )
 maps_panels <-
   sidebarPanel(
-    width = 8,
+    width = 6,
     # tabsetPanel(
-    tabPanel(
-      "ICES Ecoregions",
-      fillPage(
-        tags$style(type = "text/css", "#map1 {height: calc(100vh - 140px) !important;}"), #
+    #tabPanel(
+    #panel(heading = "ICES Ecoregions",status = "primary",
+    div(
+          tags$style(type = "text/css", "#map1 {height: calc(70vh - 140px) !important;}"), #
         withSpinner(
-          leafletOutput("map1", height = "100%", width = "100%")          
-        )        
-      )
-    )
-    
-     # ,
-    # tabPanel(
-    #   "ICES Areas",
-    #   fillPage(
-    #     tags$style(type = "text/css", "#map2 {height: calc(100vh - 200px) !important;}"),
-    #     leafletOutput("map2", height = "100%", width = "100%")
-    #   )
-    # )
-    # )
-  )
-
-selectize_panel <-
-  mainPanel(
-    width = 4, style = "max-height: 90vh; overflow-y: auto;",
-    # actionButton("help_tab1", "About this Page", icon = icon("circle-info", "fa-solid"), width = "100%"),
-    tipify(
-      actionButton(inputId = "help_tab1", label = NULL, style = "position: absolute; top: 1%; right:4%; width: 30px; height: 30px; background: url('info.png');  background-size: cover; background-position: center; border: 1px solid transparent;"),
-      title = "Click here for help", placement = "left", trigger = "hover"),
-    panel(
+          leafletOutput("map1", height = "100%", width = "100%")
+        )
+    ),
+    #),
+    ##    tabPanel(
+    ##      "Filter",
+    #panel(
+    div(
       selectizeInput(
         inputId = "selected_locations",
         label = "ICES Ecoregions",
@@ -130,7 +114,7 @@ selectize_panel <-
         multiple = FALSE,
         width = "100%",
         options = list(
-          placeholder = "Select ICES Area(s)"
+          placeholder = "Select assessment year"
         )
       ),
       #######
@@ -141,17 +125,17 @@ selectize_panel <-
           # EcoRegion = list(inputId = "EcoRegion", title = "EcoRegion:"),
           # StockDatabaseID = list(inputId = "StockDatabaseID", title = "StockDatabaseID:"),
           # StockKey = list(inputId = "StockKey", title = "StockKey:"),
-          StockKeyLabel = list(inputId = "StockKeyLabel", title = "Stock code:"),
-          # SpeciesScientificName = list(inputId = "SpeciesScientificName", title = "SpeciesScientificName:"),
           SpeciesCommonName = list(inputId = "SpeciesCommonName", title = "Common name:"),
-          ExpertGroup = list(inputId = "ExpertGroup", title = "ExpertGroup:"),
+          StockKeyLabel = list(inputId = "StockKeyLabel", title = "Stock code:")#,
+          # SpeciesScientificName = list(inputId = "SpeciesScientificName", title = "SpeciesScientificName:"),
+          #ExpertGroup = list(inputId = "ExpertGroup", title = "ExpertGroup:"),
           # AdviceDraftingGroup = list(inputId = "AdviceDraftingGroup", title = "AdviceDraftingGroup:"),
-          DataCategory = list(inputId = "DataCategory", title = "Data category:"),
-          YearOfLastAssessment = list(inputId = "YearOfLastAssessment", title = "Year of last assessment:"),
+          #DataCategory = list(inputId = "DataCategory", title = "Data category:"),
+          #YearOfLastAssessment = list(inputId = "YearOfLastAssessment", title = "Year of last assessment:"),
           # AssessmentFrequency = list(inputId = "AssessmentFrequency", title = "AssessmentFrequency:"),
           # YearOfNextAssessment = list(inputId = "YearOfNextAssessment", title = "YearOfNextAssessment:"),
           # AdviceReleaseDate = list(inputId = "AdviceReleaseDate", title = "AdviceReleaseDate:"),
-          AdviceCategory = list(inputId = "AdviceCategory", title = "Advice category:")
+          #AdviceCategory = list(inputId = "AdviceCategory", title = "Advice category:")
           # AdviceType = list(inputId = "AdviceType", title = "AdviceType:"),
           # TrophicGuild = list(inputId = "TrophicGuild", title = "TrophicGuild:"),
           # FisheriesGuild = list(inputId = "FisheriesGuild", title = "FisheriesGuild:"),
@@ -159,11 +143,32 @@ selectize_panel <-
           # Published = list(inputId = "Published", title = "Published:")
           # ICES_area = list(inputId = "ICES_area", title = "ICES_area")
         ),
-        inline = FALSE
+        inline = TRUE
       ),
-      heading = "Data filtering",
+      heading = "Stock filtering",
       status = "primary"
-    ),
+    )
+  )
+
+# ,
+# tabPanel(
+#   "ICES Areas",
+#   fillPage(
+#     tags$style(type = "text/css", "#map2 {height: calc(100vh - 200px) !important;}"),
+#     leafletOutput("map2", height = "100%", width = "100%")
+#   )
+# )
+#)
+#)
+
+selectize_panel <-
+  mainPanel(
+    width = 6, style = "max-height: 90vh; overflow-y: auto;",
+    # actionButton("help_tab1", "About this Page", icon = icon("circle-info", "fa-solid"), width = "100%"),
+    tipify(
+      actionButton(inputId = "help_tab1", label = NULL, style = "position: absolute; top: 1%; right:4%; width: 30px; height: 30px; background: url('info.png');  background-size: cover; background-position: center; border: 1px solid transparent;"),
+      title = "Click here for help", placement = "left", trigger = "hover"),
+    DTOutput("tbl"),
     htmlOutput("app_last_update")
   )
 ################################## SAG plots tab
@@ -204,7 +209,7 @@ SAG_plots_righ_panel <- sidebarPanel(
 
 ##############################################Quality of assessment tab
 quality_of_assessment <- splitLayout(
-  style = "border: 1px solid silver; height: 80vh; overflow-y: auto;",  
+  style = "border: 1px solid silver; height: 80vh; overflow-y: auto;",
   cellWidths = c("33%", "33%", "33%"),
   cellArgs = list(style = "padding: 6px"),
   panel(
@@ -329,7 +334,7 @@ catch_scenarios_right_panel <- sidebarPanel(
   #     timevisOutput("advice_timeline", height = "5%", width = "100%")
   #   )
   ),
-  
+
   panel(
     title = "Catch scenario table",
     fillPage(

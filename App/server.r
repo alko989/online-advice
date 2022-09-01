@@ -236,10 +236,12 @@ observe({
     id = "my-filters",
     # data = separate_ecoregions(stock_list_all, selected_1$groups),
     data = eco_filter,
+    inline = TRUE,
     vars = c(
-      "StockKeyLabel", "SpeciesCommonName",
-      "ExpertGroup", "DataCategory", "YearOfLastAssessment",
-      "AdviceCategory"
+      "StockKeyLabel", "SpeciesCommonName"#,
+      # "ExpertGroup", "DataCategory", "YearOfLastAssessment",
+      # "AdviceCategory"
+
     )
   )
   
@@ -269,7 +271,7 @@ observe({
     escape = FALSE,
     selection = 'none', 
     server = FALSE,    
-    caption = "Select the fish stock of interest and then click on one of panels on the right",
+    #caption = "Select the fish stock of interest and then click on one of panels on the right",
     options = list(
       order = list(2, "asc"),
       dom = "Bfrtip",
@@ -286,7 +288,6 @@ observe({
 
   ## process radio button selection
   observeEvent(input$rdbtn, {
-    
     filtered_row <- res_mod()[str_detect(res_mod()$Select, regex(paste0("\\b", input$rdbtn,"\\b"))), ]
     
     updateQueryString(paste0("?assessmentkey=", filtered_row$AssessmentKey), mode = "push") ####
